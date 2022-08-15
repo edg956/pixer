@@ -5,14 +5,26 @@ import (
 )
 
 type User struct {
-	id uuid.UUID
-	name string
-	email string
+	Id    uuid.UUID `json:"id"`
+	Name  string    `json:"name"`
+	Email string    `json:"email,omitempty"`
 }
 
-
 type Album struct {
-	id uuid.UUID
-	name string
-	owner User
+	Id    uuid.UUID `json:"id"`
+	Name  string    `json:"name"`
+	Owner User      `json:"user"`
+}
+
+func (u User) CreateNewAlbum(name string) (Album, error) {
+	id, err := uuid.NewUUID()
+
+	if err != nil {
+		return Album{}, err
+	}
+	return Album{
+		Id:    id,
+		Name:  name,
+		Owner: u,
+	}, nil
 }
