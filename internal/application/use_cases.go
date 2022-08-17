@@ -1,7 +1,6 @@
 package application
 
 import (
-	"github.com/edg956/pixer/internal/domain"
 	"github.com/edg956/pixer/internal/infrastructure/repositories"
 	"github.com/google/uuid"
 )
@@ -12,19 +11,17 @@ func CreateNewAlbum(userId uuid.UUID, albumName string) (uuid.UUID, error) {
 	if err != nil {
 		return uuid.Nil, err
 	}
-
 	albumRepo, err := repositories.GetAlbumRepository()
 	if err != nil {
 		return uuid.Nil, err
 	}
 
-	var user domain.User
-	user, err = userRepo.GetById(userId)
+	user, err := userRepo.GetById(userId)
 	if err != nil {
 		return uuid.Nil, err
 	}
-	album, err := user.CreateNewAlbum(albumName)
 
+	album, err := user.CreateNewAlbum(albumName)
 	if err != nil {
 		return uuid.Nil, err
 	}

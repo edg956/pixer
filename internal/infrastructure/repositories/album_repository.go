@@ -25,11 +25,10 @@ func (repo *InMemoryAlbumRepository) Create(album domain.Album) error {
 
 var albumInstance *AlbumRepository
 
-func GetAlbumRepository() (*AlbumRepository, error) {
+func GetAlbumRepository() (AlbumRepository, error) {
 	if albumInstance == nil {
-		var repo AlbumRepository
-		repo = &InMemoryAlbumRepository{memory: make(map[string]domain.Album)}
+		var repo AlbumRepository = &InMemoryAlbumRepository{memory: make(map[string]domain.Album)}
 		albumInstance = &repo
 	}
-	return albumInstance, nil
+	return *albumInstance, nil
 }

@@ -25,11 +25,10 @@ func (repo *InMemoryUserRepository) GetById(id uuid.UUID) (domain.User, error) {
 
 var userInstance *UserRepository
 
-func GetUserRepository() (*UserRepository, error) {
+func GetUserRepository() (UserRepository, error) {
 	if userInstance == nil {
-		var repo UserRepository
-		repo = &InMemoryUserRepository{memory: make(map[string]domain.User)}
+		var repo UserRepository = UserRepository(&InMemoryUserRepository{memory: make(map[string]domain.User)})
 		userInstance = &repo
 	}
-	return userInstance, nil
+	return *userInstance, nil
 }
