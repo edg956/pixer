@@ -12,11 +12,11 @@ type UserRepository interface {
 }
 
 type InMemoryUserRepository struct {
-	memory map[string]domain.User
+	memory map[uuid.UUID]domain.User
 }
 
 func (repo *InMemoryUserRepository) GetById(id uuid.UUID) (domain.User, error) {
-	if val, ok := repo.memory[id.String()]; ok {
+	if val, ok := repo.memory[id]; ok {
 		return val, nil
 	}
 
@@ -27,7 +27,7 @@ var userInstance *UserRepository
 
 func GetUserRepository() (UserRepository, error) {
 	if userInstance == nil {
-		var repo UserRepository = UserRepository(&InMemoryUserRepository{memory: make(map[string]domain.User)})
+		var repo UserRepository = UserRepository(&InMemoryUserRepository{memory: make(map[uuid.UUID]domain.User)})
 		userInstance = &repo
 	}
 	return *userInstance, nil
