@@ -28,7 +28,7 @@ func TestCommit(t *testing.T) {
 
 	if value, ok := ptr.AlbumMemory[id]; ok {
 		if value != album {
-			t.Errorf("Expected %s, instead got %s", album, value)
+			t.Errorf("Expected %v, instead got %v", album, value)
 		}
 	} else {
 		t.Errorf("Expected AlbumMemory to contain an album with ID %s", id)
@@ -55,6 +55,6 @@ func TestRollback(t *testing.T) {
 	ptr.rollback()
 
 	if value, ok := ptr.AlbumMemory[id]; ok {
-		t.Errorf("Expected memory to be empty, instead got %s", value)
+		t.Errorf("Expected memory to be empty, instead got %v", value)
 	}
 }

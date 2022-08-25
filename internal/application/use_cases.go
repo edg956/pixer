@@ -27,11 +27,11 @@ func CreateNewAlbum(userId uuid.UUID, albumName string) (uuid.UUID, error) {
 	}
 
 	// store album in repository
-	err = albumRepo.Create(album)
+	err = albumRepo.Create(&album)
 
 	if err != nil {
 		return uuid.Nil, err
 	}
 
-	return album.Id, nil
+	return album.ID, nil
 }

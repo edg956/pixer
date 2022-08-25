@@ -8,19 +8,19 @@ import (
 )
 
 type AlbumRepository interface {
-	Create(album domain.Album) error
+	Create(album *domain.Album) error
 }
 
 type InMemoryAlbumRepository struct {
 	memory map[uuid.UUID]domain.Album
 }
 
-func (repo *InMemoryAlbumRepository) Create(album domain.Album) error {
-	albumId := album.Id
-	if _, exists := repo.memory[albumId]; exists {
-		return errors.New(fmt.Sprintf("Album with Id %s already exists.", albumId))
+func (repo *InMemoryAlbumRepository) Create(album *domain.Album) error {
+	albumID := album.ID
+	if _, exists := repo.memory[albumID]; exists {
+		return errors.New(fmt.Sprintf("Album with Id %s already exists.", albumID))
 	}
-	repo.memory[albumId] = album
+	repo.memory[albumID] = *album
 	return nil
 }
 
