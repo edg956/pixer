@@ -8,12 +8,12 @@ import (
 )
 
 func TestCommit(t *testing.T) {
-	var uow UnitOfWork = &InMemoryUoW{
-		AlbumMemory: make(map[uuid.UUID]domain.Album),
-		UserMemory:  make(map[uuid.UUID]domain.User),
+	var uow UnitOfWork = &FakeUoW{
+		albumMemory: make(map[uuid.UUID]domain.Album),
+		userMemory:  make(map[uuid.UUID]domain.User),
 	}
 
-	ptr := uow.(*InMemoryUoW)
+	ptr := uow.(*FakeUoW)
 	ptr.begin()
 
 	id, err := uuid.NewUUID()
@@ -23,25 +23,25 @@ func TestCommit(t *testing.T) {
 
 	album := domain.Album{}
 
-	ptr.AlbumMemory[id] = album
+	ptr.albumMemory[id] = album
 	ptr.commit()
 
-	if value, ok := ptr.AlbumMemory[id]; ok {
+	if value, ok := ptr.albumMemory[id]; ok {
 		if value != album {
 			t.Errorf("Expected %v, instead got %v", album, value)
 		}
 	} else {
-		t.Errorf("Expected AlbumMemory to contain an album with ID %s", id)
+		t.Errorf("Expected albumMemory to contain an album with ID %s", id)
 	}
 }
 
 func TestRollback(t *testing.T) {
-	var uow UnitOfWork = &InMemoryUoW{
-		AlbumMemory: make(map[uuid.UUID]domain.Album),
-		UserMemory:  make(map[uuid.UUID]domain.User),
+	var uow UnitOfWork = &FakeUoW{
+		albumMemory: make(map[uuid.UUID]domain.Album),
+		userMemory:  make(map[uuid.UUID]domain.User),
 	}
 
-	ptr := uow.(*InMemoryUoW)
+	ptr := uow.(*FakeUoW)
 	ptr.begin()
 
 	id, err := uuid.NewUUID()
@@ -51,10 +51,10 @@ func TestRollback(t *testing.T) {
 
 	album := domain.Album{}
 
-	ptr.AlbumMemory[id] = album
+	ptr.albumMemory[id] = album
 	ptr.rollback()
 
-	if value, ok := ptr.AlbumMemory[id]; ok {
+	if value, ok := ptr.albumMemory[id]; ok {
 		t.Errorf("Expected memory to be empty, instead got %v", value)
 	}
 }

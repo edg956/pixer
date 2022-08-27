@@ -28,13 +28,3 @@ func (repo *FakeUserRepository) GetById(id uuid.UUID) (domain.User, error) {
 
 	return domain.User{}, errors.New(fmt.Sprintf("User with ID %s not found", id.String()))
 }
-
-var userInstance *UserRepository
-
-func GetUserRepository() (UserRepository, error) {
-	if userInstance == nil {
-		var repo UserRepository = UserRepository(&FakeUserRepository{memory: make(map[uuid.UUID]domain.User)})
-		userInstance = &repo
-	}
-	return *userInstance, nil
-}
