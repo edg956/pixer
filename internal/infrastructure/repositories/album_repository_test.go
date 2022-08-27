@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestCreate(t *testing.T) {
+func TestSaveAlbum(t *testing.T) {
 	id, err := uuid.NewUUID()
 	if err != nil {
 		t.Fatal("Could not create UUID")
@@ -23,9 +23,9 @@ func TestCreate(t *testing.T) {
 	album := domain.Album{ID: id, Name: "Test Album", Owner: user}
 	memory := make(map[uuid.UUID]domain.Album)
 
-	repository := InMemoryAlbumRepository{memory: memory}
+	repository := FakeAlbumRepository{memory: memory}
 
-	err = repository.Create(&album)
+	err = repository.Save(&album)
 
 	if err != nil {
 		t.Fatal("Error creating album")

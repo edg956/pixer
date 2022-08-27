@@ -27,7 +27,7 @@ func CreateNewAlbum(userId uuid.UUID, albumName string) (uuid.UUID, error) {
 	}
 
 	// store album in repository
-	err = albumRepo.Create(&album)
+	err = albumRepo.Save(&album)
 
 	if err != nil {
 		return uuid.Nil, err
