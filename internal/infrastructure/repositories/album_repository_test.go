@@ -8,7 +8,7 @@ import (
 )
 
 func TestSaveAlbum(t *testing.T) {
-	id, err := uuid.NewUUID()
+	id, err := uuid.NewRandom()
 	if err != nil {
 		t.Fatal("Could not create UUID")
 		return

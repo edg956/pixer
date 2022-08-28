@@ -3,30 +3,36 @@ package uow
 import (
 	"fmt"
 	"github.com/edg956/pixer/internal/domain"
+	"github.com/edg956/pixer/internal/infrastructure/repositories"
 	"github.com/google/uuid"
 	"testing"
 )
 
 func TestCommit(t *testing.T) {
+	albumMemory := make(map[uuid.UUID]domain.Album)
+	userMemory := make(map[uuid.UUID]domain.User)
+	albums := repositories.NewFakeAlbumRepository(&albumMemory)
+	users := repositories.NewFakeUserRepository(&userMemory)
+
 	var uow UnitOfWork = &FakeUoW{
-		albumMemory: make(map[uuid.UUID]domain.Album),
-		userMemory:  make(map[uuid.UUID]domain.User),
+		Albums:      albums,
+		albumMemory: &albumMemory,
+		Users:       users,
+		userMemory:  &userMemory,
 	}
 
-	ptr := uow.(*FakeUoW)
-	ptr.begin()
+	uow.Begin()
 
-	id, err := uuid.NewUUID()
+	id, err := uuid.NewRandom()
 	if err != nil {
 		t.Fatal(fmt.Sprintf("Error creating UUID: %s", err))
 	}
 
-	album := domain.Album{}
+	album := domain.Album{ID: id, Name: "Test Album"}
+	albumMemory[id] = album
+	uow.Commit()
 
-	ptr.albumMemory[id] = album
-	ptr.commit()
-
-	if value, ok := ptr.albumMemory[id]; ok {
+	if value, ok := albumMemory[id]; ok {
 		if value != album {
 			t.Errorf("Expected %v, instead got %v", album, value)
 		}
@@ -36,25 +42,31 @@ func TestCommit(t *testing.T) {
 }
 
 func TestRollback(t *testing.T) {
+	albumMemory := make(map[uuid.UUID]domain.Album)
+	userMemory := make(map[uuid.UUID]domain.User)
+	albums := repositories.NewFakeAlbumRepository(&albumMemory)
+	users := repositories.NewFakeUserRepository(&userMemory)
+
 	var uow UnitOfWork = &FakeUoW{
-		albumMemory: make(map[uuid.UUID]domain.Album),
-		userMemory:  make(map[uuid.UUID]domain.User),
+		Albums:      albums,
+		albumMemory: &albumMemory,
+		Users:       users,
+		userMemory:  &userMemory,
 	}
 
-	ptr := uow.(*FakeUoW)
-	ptr.begin()
+	uow.Begin()
 
-	id, err := uuid.NewUUID()
+	id, err := uuid.NewRandom()
 	if err != nil {
 		t.Fatal(fmt.Sprintf("Error creating UUID: %s", err))
 	}
 
-	album := domain.Album{}
+	album := domain.Album{ID: id, Name: "Test Album"}
 
-	ptr.albumMemory[id] = album
-	ptr.rollback()
+	albumMemory[id] = album
+	uow.Rollback()
 
-	if value, ok := ptr.albumMemory[id]; ok {
+	if value, ok := albumMemory[id]; ok {
 		t.Errorf("Expected memory to be empty, instead got %v", value)
 	}
 }

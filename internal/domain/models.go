@@ -17,7 +17,7 @@ type Album struct {
 }
 
 func CreateNewUser(name string, email string) (*User, error) {
-	if id, err := uuid.NewUUID(); err == nil {
+	if id, err := uuid.NewRandom(); err == nil {
 		return &User{ID: id, Name: name, Email: email}, nil
 	} else {
 		return nil, err
@@ -25,7 +25,7 @@ func CreateNewUser(name string, email string) (*User, error) {
 }
 
 func (u User) CreateNewAlbum(name string) (Album, error) {
-	id, err := uuid.NewUUID()
+	id, err := uuid.NewRandom()
 
 	if err != nil {
 		return Album{}, err

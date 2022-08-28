@@ -16,6 +16,10 @@ type FakeUserRepository struct {
 	memory map[uuid.UUID]domain.User
 }
 
+func NewFakeUserRepository(memory *map[uuid.UUID]domain.User) UserRepository {
+	return UserRepository(&FakeUserRepository{memory: *memory})
+}
+
 func (repo *FakeUserRepository) Save(user domain.User) error {
 	repo.memory[user.ID] = user
 	return nil
