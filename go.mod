@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/GoogleCloudPlatform/functions-framework-go v1.5.3
 	github.com/google/uuid v1.1.2
+	github.com/pkg/errors v0.9.1
 )
 
 require (
